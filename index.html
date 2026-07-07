@@ -490,20 +490,20 @@
             <div style="font-size:10.5px; color:#7a7267; line-height:1.25; margin-top:2px;">Chưa gồm nội thất</div>
           </button>
           <button class="goi-btn" data-goi="2" style="flex:1; padding:12px 6px; border-radius:12px; cursor:pointer; text-align:center; border:2px solid #e4dccc; background:#fff;">
-            <div style="font-size:13px; font-weight:700; color:#193544;">Full nội thất</div>
-            <div style="font-size:10.5px; color:#7a7267; line-height:1.25; margin-top:2px;">Full nội thất và bàn giao nhà</div>
-            <div style="font-size:10.5px; color:#b3925e; font-weight:700; line-height:1.25; margin-top:2px;">Chìa khóa trao tay</div>
+            <div style="font-size:12px; font-weight:700; color:#193544; line-height:1.2;">Trọn gói – Chìa khóa trao tay</div>
+            <div style="font-size:10.5px; color:#7a7267; line-height:1.25; margin-top:3px;">Bao gồm nội thất</div>
           </button>
         </div>
 
         <div style="background:#193544; border-radius:16px; padding:20px 22px; color:#fff;">
-          <div style="display:flex; justify-content:space-between; font-size:13px; color:#a89c88; margin-bottom:6px;"><span>Diện tích xây dựng</span><span style="color:#d9bd93; font-weight:600;">≈ <span id="dtText">280</span> m²</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:#a89c88; margin-bottom:6px;"><span>Diện tích xây dựng <span style="opacity:.75;">(hệ số ≈ <span id="hesoText">4</span>)</span></span><span style="color:#d9bd93; font-weight:600;">≈ <span id="dtText">280</span> m²</span></div>
           <div style="display:flex; justify-content:space-between; font-size:13px; color:#a89c88; margin-bottom:14px;"><span>Đơn giá <span id="goiName">trọn gói</span></span><span style="color:#d9bd93; font-weight:600;"><span id="giaText">6.200.000</span> đ/m²</span></div>
           <div style="border-top:1px dashed rgba(255,255,255,.2); padding-top:14px; display:flex; align-items:flex-end; justify-content:space-between;">
             <span style="font-size:14px; color:#cabfae;">Chi phí dự kiến</span>
             <span style="font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:34px; font-weight:700; color:#fff;">≈ <span id="totalText">1,74 tỷ</span></span>
           </div>
         </div>
+        <p style="font-size:11.5px; color:#9a9082; margin-top:9px; line-height:1.5;">*Ước tính theo hệ số chuẩn: móng 50%, sàn 100%/tầng, mái 50%, hầm 200%. Hệ số thực tế thay đổi theo loại móng, kiểu mái & độ sâu hầm — xem chi tiết ở bảng “Cách tính diện tích” bên dưới.</p>
         <a href="#lienhe" style="display:block; margin-top:14px; text-align:center; background:#b3925e; color:#fff; padding:15px; border-radius:12px; font-size:15px; font-weight:700; text-decoration:none; animation:pulseGold 2.4s infinite;">Nhận báo giá chi tiết cho lô đất của tôi →</a>
       </div>
 
@@ -623,12 +623,35 @@
         </button>
         <div id="hesoPanel" style="max-height:0px; overflow:hidden; transition:max-height .35s ease;">
           <div style="padding:0 28px 26px;">
-            <div style="display:grid; grid-template-columns:1fr auto; gap:0 20px; font-size:14px;">
-              <div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Tầng hầm sâu 1,0 – 2,0m</div><div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600;">150 – 200%</div>
-              <div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Móng băng / móng cọc</div><div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600;">30 – 50%</div>
-              <div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Sàn có mái che (mỗi tầng)</div><div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600;">100%</div>
-              <div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Sân thượng không mái che</div><div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600;">50%</div>
-              <div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Mái tôn / ngói kèo sắt / BTCT</div><div style="padding:11px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600;">30 – 100%</div>
+            <div style="display:grid; grid-template-columns:1fr auto; gap:0 18px; font-size:13.5px;">
+              <div style="grid-column:1/-1; padding:14px 0 2px; font-size:12px; font-weight:800; letter-spacing:.6px; color:#b3925e;">1 · TẦNG HẦM <span style="font-weight:500; color:#9a9082; letter-spacing:0;">(theo độ sâu so với cos vỉa hè)</span></div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Hầm sâu &lt; 1,3m</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">150%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Hầm sâu 1,3 – 1,7m</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">170%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Hầm sâu &lt; 2,0m</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">200%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Hầm sâu &gt; 2,0m</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">250%</div>
+
+              <div style="grid-column:1/-1; padding:16px 0 2px; font-size:12px; font-weight:800; letter-spacing:.6px; color:#b3925e;">2 · MÓNG <span style="font-weight:500; color:#9a9082; letter-spacing:0;">(chưa gồm cọc BTCT)</span></div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Móng đơn</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">30 – 40%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Móng cọc (ép tải / khoan nhồi)</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">50%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Móng băng</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">50%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Móng bè</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">50 – 60%</div>
+
+              <div style="grid-column:1/-1; padding:16px 0 2px; font-size:12px; font-weight:800; letter-spacing:.6px; color:#b3925e;">3 · PHẦN THÂN</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Sàn có mái che (các tầng, lửng, ban công, ô thang)</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">100%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Khu vực cầu thang</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">100%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Sân trước / sân sau</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">70 – 80%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Ô trống / giếng trời &lt; 8m²</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">100%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Ô trống 8 – 16m²</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">60%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Ô trống &gt; 16m²</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">50%</div>
+
+              <div style="grid-column:1/-1; padding:16px 0 2px; font-size:12px; font-weight:800; letter-spacing:.6px; color:#b3925e;">4 · SÂN THƯỢNG · BAN CÔNG</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Có mái che</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">100%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Không mái che</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">60 – 80%</div>
+
+              <div style="grid-column:1/-1; padding:16px 0 2px; font-size:12px; font-weight:800; letter-spacing:.6px; color:#b3925e;">5 · MÁI</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Mái BTCT phẳng</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">50%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Mái BTCT nghiêng (mái Thái / Nhật)</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">80 – 100%</div>
+              <div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); color:#4a4438;">Mái xà gồ thép + lợp ngói / tôn</div><div style="padding:9px 0; border-top:1px solid rgba(43,38,32,.08); text-align:right; font-weight:600; white-space:nowrap;">40 – 60%</div>
             </div>
           </div>
         </div>
@@ -916,7 +939,7 @@
   // ---- Config ----
   var PHONE = '0901 411 489';
   var PRICES = [3800000, 6200000, 8500000];
-  var GOI_NAMES = ['phần thô', 'hoàn thiện', 'full nội thất'];
+  var GOI_NAMES = ['phần thô', 'hoàn thiện', 'trọn gói'];
 
   // ---- State ----
   var state = { area: 80, floors: 3, basement: false, goi: 1, filter: 'all', hesoOpen: false };
@@ -952,13 +975,19 @@
 
   function renderCalc(){
     var s = state;
-    var heso = 0.5 + s.floors + 0.3 + (s.basement ? 1.7 : 0);
+    // Hệ số diện tích xây dựng — theo bảng chuẩn Decox (giá trị đại diện phổ biến):
+    var HS_MONG = 0.5;   // Móng băng / móng cọc (chưa gồm cọc BTCT) — 50%
+    var HS_SAN  = 1.0;   // Sàn mỗi tầng có mái che — 100%
+    var HS_MAI  = 0.5;   // Mái BTCT phẳng — 50%
+    var HS_HAM  = 2.0;   // Tầng hầm sâu ~2,0m — 200%
+    var heso = HS_MONG + s.floors * HS_SAN + HS_MAI + (s.basement ? HS_HAM : 0);
     var dt = s.area * heso;
     var gia = PRICES[s.goi];
     var total = dt * gia;
 
     $('areaLabel').textContent = s.area;
     $('floorLabel').textContent = s.floors;
+    $('hesoText').textContent = heso.toLocaleString('vi-VN', { maximumFractionDigits: 1 });
     $('dtText').textContent = dt.toLocaleString('vi-VN', { maximumFractionDigits: 0 });
     $('giaText').textContent = gia.toLocaleString('vi-VN');
     $('goiName').textContent = GOI_NAMES[s.goi];
@@ -986,7 +1015,8 @@
   // ---- Hệ số collapsible ----
   $('hesoBtn').addEventListener('click', function(){
     state.hesoOpen = !state.hesoOpen;
-    $('hesoPanel').style.maxHeight = state.hesoOpen ? '400px' : '0px';
+    var panel = $('hesoPanel');
+    panel.style.maxHeight = state.hesoOpen ? (panel.scrollHeight + 'px') : '0px';
     $('hesoArrow').style.transform = state.hesoOpen ? 'rotate(180deg)' : 'rotate(0deg)';
   });
 
