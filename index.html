@@ -563,7 +563,7 @@
             <span style="font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:34px; font-weight:700; color:#fff;"><span id="totalText">≈ 1,74 tỷ</span></span>
           </div>
         </div>
-        <p style="font-size:11.5px; color:#9a9082; margin-top:9px; line-height:1.5;">*Hệ số: móng 50% + bán hầm 150% / full hầm 200% + 100%/tầng cơ bản (trệt/lầu) + tầng lửng 65% + tầng tum 30% + mái BTCT tum 15% + sân thượng 70%. Hệ số thực tế thay đổi theo loại móng & độ sâu hầm & loại mái — xem bảng “Cách tính diện tích” bên dưới.</p>
+        <p style="font-size:11.5px; color:#9a9082; margin-top:9px; line-height:1.5;">*Hệ số: móng 50% + mái 50% + bán hầm 150% / full hầm 200% + 100%/tầng cơ bản (trệt/lầu) + tầng lửng 65% + tầng tum 30% + mái BTCT tum 15% + sân thượng 70%. Hệ số thực tế thay đổi theo loại móng & độ sâu hầm & loại mái — xem bảng “Cách tính diện tích” bên dưới.</p>
         <button type="button" id="ktBtn" style="display:block; width:100%; box-sizing:border-box; margin-top:14px; text-align:center; background:#b3925e; color:#fff; padding:15px; border-radius:12px; font-size:15px; font-weight:700; border:none; cursor:pointer; font-family:inherit; animation:pulseGold 2.4s infinite;">Báo cáo chi tiết →</button>
       </div>
 
@@ -1098,9 +1098,10 @@
     var s = state;
     // Hệ số diện tích xây dựng — theo bảng chuẩn Decox:
     var HS_MONG = 0.5;   // Móng — LUÔN cộng 50%
+    var HS_MAI  = 0.5;   // Mái — LUÔN cộng 50% (giống móng)
     var HS_SAN  = 1.0;   // Sàn mỗi tầng — 100%
-    // Không có mái cố định riêng. s.ham: 0/1.5/2.0 · s.lung: 0/0.65 · s.tum: 0/0.45 (tum 30% + mái BTCT tum 15%) · s.st: 0/0.70 (sân thượng)
-    var heso = HS_MONG + s.floors * HS_SAN + s.ham + s.lung + s.tum + s.st;
+    // s.ham: 0/1.5/2.0 · s.lung: 0/0.65 · s.tum: 0/0.45 (tum 30% + mái BTCT tum 15%) · s.st: 0/0.70 (sân thượng)
+    var heso = HS_MONG + HS_MAI + s.floors * HS_SAN + s.ham + s.lung + s.tum + s.st;
     var dt = s.area * heso;
     var isTC = s.tier === 'tc';
     var gia = isTC ? PRICE_MATRIX.tc[s.type][0] : PRICE_MATRIX.cc[s.type];
@@ -1381,7 +1382,7 @@
                '<div style="display:flex; justify-content:space-between; font-size:13px; color:#7a7267; padding:4px 0;"><span>Đơn giá (' + TYPE_FULL[s.type] + ' · ' + TIER_FULL[s.tier] + ')</span><b style="color:#193544;">' + pre + vnd(c.gia) + ' đ/m²</b></div>';
 
     // Diễn giải chi phí theo từng phần: DT 1 sàn × hệ số × đơn giá
-    var comps = [{ label: 'Móng (50%)', hs: 0.5 }, { label: 'Sàn ' + s.floors + ' tầng (100%/tầng)', hs: s.floors * 1.0 }];
+    var comps = [{ label: 'Móng (50%)', hs: 0.5 }, { label: 'Mái (50%)', hs: 0.5 }, { label: 'Sàn ' + s.floors + ' tầng (100%/tầng)', hs: s.floors * 1.0 }];
     if (s.ham === 1.5) comps.push({ label: 'Bán hầm (150%)', hs: 1.5 });
     else if (s.ham === 2) comps.push({ label: 'Full hầm (200%)', hs: 2.0 });
     if (s.lung) comps.push({ label: 'Tầng lửng (65%)', hs: 0.65 });
