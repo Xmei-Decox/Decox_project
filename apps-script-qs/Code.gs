@@ -10,10 +10,24 @@
  ************************************************************/
 
 /*** ===== CẤU HÌNH ===== ***/
-const SPREADSHEET_ID = '1DDbw4W8v5UelNOQnxjWYJwzaQY7r2U7E44l_pwPlqRo';
-const SHEET_PRODUCTS = 'DANH SÁCH SẢN PHẨM';
+const SPREADSHEET_ID = '1i91KGVtYyhUPT06ELWC-Bea4_Q4hG7yy5ZbXPXhqncQ';
+const SHEET_CATALOG  = 'DANH MỤC SP';   // danh mục chuẩn hoá (tự sinh từ buildCatalog)
 const SHEET_PROJECTS = 'Dự án';
 const SHEET_LINES    = 'Chi tiết báo giá';
+
+// Các sheet nguồn (báo giá mẫu) -> Nhóm chuẩn. Cột đọc theo TÊN nên không sợ lệch thứ tự.
+const CATALOG_SOURCES = [
+  { sheet: '3.2.4.THIẾT BỊ VỆ SINH',                 nhom: 'Thiết bị vệ sinh' },
+  { sheet: '3.2.4.THIẾT BỊ CHIẾU SÁNG (CÔNG TẮC)',   nhom: 'Công tắc & Ổ cắm' },
+  { sheet: '3.2.5.THIẾT BỊ CHIẾU SÁNG (ĐÈN)',        nhom: 'Chiếu sáng (Đèn)' },
+  { sheet: '3.2.6.B.THIẾT BỊ ĐIỆN LẠNH',             nhom: 'Điện lạnh' },
+  { sheet: '3.2.7.B.CỬA NỘI THẤT',                   nhom: 'Cửa nội thất' },
+  { sheet: '4.1.NỘI THẤT LIỀN TƯỜNG',                nhom: 'Nội thất liền tường' },
+  { sheet: '4.2.NỘI THẤT RỜI',                       nhom: 'Nội thất rời' },
+  { sheet: '4.3.1.RÈM CỬA',                          nhom: 'Rèm cửa' }
+];
+const CATALOG_HEADERS = ['Nhóm', 'Hạng mục', 'Tên sản phẩm', 'Thương hiệu',
+  'Nhà cung cấp', 'Mã SP', 'Mô tả', 'Kích thước', 'ĐVT', 'Đơn giá'];
 
 const PROJECT_HEADERS = [
   'Mã DA', 'Tên dự án', 'Khách hàng', 'Địa chỉ', 'SĐT',
@@ -33,10 +47,36 @@ const LC = {
 };
 
 /*** ===== ENTRY POINT ===== ***/
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.inspect) {
+    return ContentService.createTextOutput(JSON.stringify(inspectSpreadsheet_(e.parameter.inspect)))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('QS Decox – Bóc tách & Báo giá')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+}
+
+// Đọc cấu trúc mọi sheet của 1 spreadsheet (dùng tạm để phân tích, sẽ gỡ sau)
+function inspectSpreadsheet_(id) {
+  try {
+    var ss = SpreadsheetApp.openById(id);
+    var out = { ok: true, name: ss.getName(), sheets: [] };
+    ss.getSheets().forEach(function (sh) {
+      var lastRow = sh.getLastRow(), lastCol = sh.getLastColumn();
+      var rows = Math.min(lastRow, 6), cols = Math.min(lastCol, 30);
+      var sample = (rows > 0 && cols > 0) ? sh.getRange(1, 1, rows, cols).getValues() : [];
+      sample = sample.map(function (r) { return r.map(function (c) {
+        if (c == null) return '';
+        if (Object.prototype.toString.call(c) === '[object Date]') return 'DATE';
+        var s = String(c); return s.length > 60 ? s.slice(0, 60) + '…' : s;
+      }); });
+      out.sheets.push({ name: sh.getName(), rows: lastRow, cols: lastCol, sample: sample });
+    });
+    return out;
+  } catch (err) {
+    return { ok: false, error: String(err) };
+  }
 }
 
 function getSS_() {
@@ -126,48 +166,89 @@ function toNumber_(v) {
 }
 function round0_(n) { return Math.round(Number(n) || 0); }
 
-/*** ===== SẢN PHẨM ===== ***/
+/*** ===== CHUẨN HOÁ DANH MỤC ===== ***/
+// Gom sản phẩm từ các sheet nguồn -> sheet DANH MỤC SP (chạy 1 lần / khi cần làm mới)
+function buildCatalog() {
+  const ss = getSS_();
+  const seen = {};
+  const out = [];
+  CATALOG_SOURCES.forEach(function (src) {
+    const sh = ss.getSheetByName(src.sheet);
+    if (!sh || sh.getLastRow() < 2) return;
+    const map = getHeaderMap_(sh);
+    const col = {
+      ten:  findCol_(map, ['TÊN SẢN PHẨM']),
+      th:   findCol_(map, ['THƯƠNG HIỆU']),
+      ncc:  findCol_(map, ['NHÀ CUNG CẤP']),
+      ma:   findCol_(map, ['MÃ SẢN PHẨM']),
+      hm:   findCol_(map, ['HẠNG MỤC']),
+      mota: findCol_(map, ['MÔ TẢ']),
+      kt:   findCol_(map, ['KÍCH THƯỚC']),
+      dvt:  findCol_(map, ['ĐVT', 'ĐƠN VỊ TÍNH', 'ĐƠN VỊ']),
+      gia:  findCol_(map, ['ĐƠN GIÁ'])
+    };
+    const rows = sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues();
+    rows.forEach(function (r) {
+      const ten = cleanText_(pick_(r, col.ten)).trim();
+      if (!ten) return; // bỏ dòng nhóm/tầng (I – TẦNG TRỆT…) và dòng trống
+      const th = cleanText_(pick_(r, col.th)).trim();
+      const kt = cleanText_(pick_(r, col.kt)).trim();
+      const gia = toNumber_(pick_(r, col.gia));
+      const key = normalize_(ten) + '|' + normalize_(th) + '|' + normalize_(kt);
+      if (seen[key]) { if (seen[key].gia === 0 && gia > 0) seen[key].gia = gia; return; }
+      const item = {
+        nhom: src.nhom,
+        hangMuc: cleanText_(pick_(r, col.hm)).trim() || src.nhom,
+        ten: ten, th: th, ncc: cleanText_(pick_(r, col.ncc)).trim(),
+        ma: cleanText_(pick_(r, col.ma)).trim(), mota: cleanText_(pick_(r, col.mota)).trim(),
+        kt: kt, dvt: cleanText_(pick_(r, col.dvt)).trim() || 'Cái', gia: gia
+      };
+      seen[key] = item; out.push(item);
+    });
+  });
+
+  var sh = ss.getSheetByName(SHEET_CATALOG);
+  if (!sh) sh = ss.insertSheet(SHEET_CATALOG);
+  sh.clear();
+  sh.getRange(1, 1, 1, CATALOG_HEADERS.length).setValues([CATALOG_HEADERS])
+    .setFontWeight('bold').setBackground('#12324a').setFontColor('#ffffff');
+  sh.setFrozenRows(1);
+  if (out.length) {
+    const data = out.map(function (i) {
+      return [i.nhom, i.hangMuc, i.ten, i.th, i.ncc, i.ma, i.mota, i.kt, i.dvt, i.gia];
+    });
+    sh.getRange(2, 1, data.length, CATALOG_HEADERS.length).setValues(data);
+  }
+  try { CacheService.getScriptCache().remove('qs_products'); } catch (e) {}
+  return 'Đã tạo DANH MỤC SP: ' + out.length + ' sản phẩm (từ ' + CATALOG_SOURCES.length + ' nhóm)';
+}
+
+/*** ===== SẢN PHẨM (đọc từ DANH MỤC SP đã chuẩn hoá) ===== ***/
 function getProducts() {
   const ss = getSS_();
-  const sh = ss.getSheetByName(SHEET_PRODUCTS);
+  const sh = ss.getSheetByName(SHEET_CATALOG);
   if (!sh || sh.getLastRow() < 2) return [];
   const map = getHeaderMap_(sh);
-  const col = {
-    ma:        findCol_(map, ['MÃ SẢN PHẨM', 'MA SP', 'MÃ']),
-    ten:       findCol_(map, ['TÊN SẢN PHẨM']),
-    thuongHieu:findCol_(map, ['THƯƠNG HIỆU']),
-    ncc:       findCol_(map, ['NHÀ CUNG CẤP']),
-    sku:       findCol_(map, ['SKU']),
-    hangMuc:   findCol_(map, ['HẠNG MỤC', 'LOẠI SẢN PHẨM', 'LOẠI']),
-    moTa:      findCol_(map, ['MÔ TẢ']),
-    kichThuoc: findCol_(map, ['KÍCH THƯỚC']),
-    hinhAnh:   findCol_(map, ['HÌNH ẢNH', 'ẢNH']),
-    link:      findCol_(map, ['LINK']),
-    dvt:       findCol_(map, ['ĐVT', 'ĐƠN VỊ']),
-    von:       findCol_(map, ['ĐƠN GIÁ GỐC', 'GIÁ GỐC', 'GIÁ VỐN']),
-    ban:       findCol_(map, ['GIÁ BÁN LẺ', 'GIÁ BÁN', 'ĐƠN GIÁ'])
+  const c = {
+    nhom: findCol_(map, ['NHÓM']), hm: findCol_(map, ['HẠNG MỤC']),
+    ten: findCol_(map, ['TÊN SẢN PHẨM']), th: findCol_(map, ['THƯƠNG HIỆU']),
+    ncc: findCol_(map, ['NHÀ CUNG CẤP']), ma: findCol_(map, ['MÃ SP', 'MÃ SẢN PHẨM']),
+    mota: findCol_(map, ['MÔ TẢ']), kt: findCol_(map, ['KÍCH THƯỚC']),
+    dvt: findCol_(map, ['ĐVT']), gia: findCol_(map, ['ĐƠN GIÁ'])
   };
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues();
   const out = [];
   rows.forEach(function (r) {
-    const ten = cleanText_(pick_(r, col.ten));
-    const ma  = cleanText_(pick_(r, col.ma));
-    if (!ten && !ma) return;
-    const von = toNumber_(pick_(r, col.von));
-    const ban = toNumber_(pick_(r, col.ban)) || von;
-    const lnPct = von > 0 ? Math.round((ban - von) / von * 100) : 0;
+    const ten = cleanText_(pick_(r, c.ten));
+    if (!ten) return;
+    const gia = toNumber_(pick_(r, c.gia));
     out.push({
-      ma: ma, ten: ten,
-      thuongHieu: cleanText_(pick_(r, col.thuongHieu)),
-      ncc: cleanText_(pick_(r, col.ncc)),
-      sku: cleanText_(pick_(r, col.sku)),
-      hangMuc: cleanText_(pick_(r, col.hangMuc)),
-      moTa: cleanText_(pick_(r, col.moTa)),
-      kichThuoc: cleanText_(pick_(r, col.kichThuoc)),
-      hinhAnh: cleanText_(pick_(r, col.hinhAnh)),
-      link: cleanText_(pick_(r, col.link)),
-      dvt: cleanText_(pick_(r, col.dvt)) || 'Cái',
-      donGiaVon: von, donGiaBan: ban, lnPct: lnPct
+      ma: cleanText_(pick_(r, c.ma)), ten: ten,
+      thuongHieu: cleanText_(pick_(r, c.th)), ncc: cleanText_(pick_(r, c.ncc)),
+      nhom: cleanText_(pick_(r, c.nhom)), hangMuc: cleanText_(pick_(r, c.hm)),
+      moTa: cleanText_(pick_(r, c.mota)), kichThuoc: cleanText_(pick_(r, c.kt)),
+      hinhAnh: '', link: '', dvt: cleanText_(pick_(r, c.dvt)) || 'Cái',
+      donGiaVon: gia, donGiaBan: gia, lnPct: 0
     });
   });
   return out;
@@ -279,7 +360,7 @@ function addLine(maDA, product, soLuong) {
   var   ln  = von > 0 ? Math.round((ban - von) / von * 100) : (Number(product.lnPct) || 0);
   const stt = getLines(maDA).length + 1;
   sh.appendRow([
-    Utilities.getUuid(), maDA, stt, product.nhom || product.hangMuc || '', product.loai || '',
+    Utilities.getUuid(), maDA, stt, product.nhom || '', product.hangMuc || product.loai || '',
     product.ma || '', product.ten || '', product.thuongHieu || '', product.moTa || '',
     product.kichThuoc || '', product.hinhAnh || product.link || '', product.dvt || 'Cái',
     sl, von, ln, ban, sl * von, sl * ban

@@ -35,19 +35,19 @@
   .opt-btn.on { border-color:#193544; background:#193544; color:#fff; box-shadow:0 6px 16px -8px rgba(25,53,68,.6); }
 
   /* ---- Pricing cards: dynamic hover ---- */
-  .price-card { position:relative; background:#fff; transition: transform .32s cubic-bezier(.2,.7,.2,1), background .3s ease, box-shadow .32s ease, border-color .32s ease, opacity .32s ease; }
+  .price-card { position:relative; background:#fff; display:flex; flex-direction:column; transition: transform .32s cubic-bezier(.2,.7,.2,1), background .3s ease, box-shadow .32s ease, border-color .32s ease, opacity .32s ease; }
   /* Màu chữ mặc định trong card (nền trắng) */
   .p-eyebrow { font-size:14px; font-weight:700; letter-spacing:1px; color:#7a7267; margin-bottom:6px; }
-  .p-sub { font-size:14px; color:#7a7267; margin-bottom:18px; min-height:38px; }
+  .p-sub { font-size:14px; color:#7a7267; margin-bottom:18px; min-height:57px; }
   .p-price-row { display:flex; align-items:baseline; gap:6px; margin-bottom:22px; }
   .p-price { font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:38px; font-weight:700; color:#193544; }
   .p-unit { color:#7a7267; font-size:15px; }
-  .p-feats { display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#4a4438; line-height:1.4; }
+  .p-feats { display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:#4a4438; line-height:1.4; margin-bottom:24px; }
   .p-feats b { color:#193544; }
   /* Badge "Gợi ý cho bạn" (giữ nguyên) */
   .suggest-badge { position:absolute; top:14px; right:14px; background:#1f9d57; color:#fff; font-size:11px; font-weight:700; padding:5px 11px; border-radius:999px; opacity:0; transform:scale(.8); transition:opacity .25s ease, transform .25s ease; pointer-events:none; z-index:3; box-shadow:0 4px 12px rgba(31,122,77,.4); }
   /* Gói đang phù hợp → chuyển sang NỀN XANH DƯƠNG (navy) nổi bật */
-  .card-active { background:#193544 !important; border-color:#193544 !important; transform:translateY(-10px); box-shadow:0 26px 54px -18px rgba(22,19,15,.55) !important; }
+  .card-active { background:#193544 !important; border-color:#193544 !important; box-shadow:0 26px 54px -18px rgba(22,19,15,.55) !important; }
   .card-active .suggest-badge { opacity:1; transform:scale(1); }
   .card-active .p-eyebrow { color:#d9bd93; }
   .card-active .p-sub { color:#a89c88; }
@@ -56,11 +56,19 @@
   .card-active .p-feats { color:#cabfae; }
   .card-active .p-feats b { color:#fff; }
   .card-active .btn-detail { background:#b3925e !important; border-color:#b3925e !important; color:#fff !important; }
-  /* Card nổi bật (giữa) — chỉ nhô lên, không cố định màu */
-  .price-featured { transform:translateY(-10px); }
-  .price-card:hover { transform: translateY(-14px); box-shadow: 0 28px 56px -20px rgba(22,19,15,.5); }
-  .card-active:hover { transform: translateY(-16px); }
-  .btn-detail { display:block; width:100%; margin-top:26px; text-align:center; padding:13px; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; font-family:inherit; transition:filter .2s ease, transform .15s ease; }
+  /* 3 card ngang hàng — không nhô lệch. Chỉ nhấc nhẹ khi rê chuột */
+  .price-card:hover { transform: translateY(-8px); box-shadow: 0 28px 56px -20px rgba(22,19,15,.5); }
+  /* Tabs phân khúc (lướt Tiêu chuẩn ↔ Cao cấp) */
+  .pk-tabs { display:inline-flex; background:#efeae1; border-radius:999px; padding:4px; gap:4px; }
+  .pk-tab { border:none; background:none; padding:9px 24px; border-radius:999px; font-size:14px; font-weight:700; color:#7a7267; cursor:pointer; font-family:inherit; transition:background .2s, color .2s; }
+  .pk-tab.on { background:#193544; color:#fff; box-shadow:0 5px 14px -6px rgba(25,53,68,.6); }
+  .pk-arrow { width:38px; height:38px; flex-shrink:0; border-radius:50%; border:1.5px solid #d8cfbe; background:#fff; color:#193544; font-size:19px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .2s, background .2s; }
+  .pk-arrow:hover { border-color:#b3925e; background:#faf6ef; }
+  .p-from { display:none; font-size:16px; font-weight:600; color:#7a7267; align-self:center; margin-right:2px; }
+  .card-active .p-from { color:#a89c88; }
+  .price-grid { transition: opacity .22s ease; }
+  .price-grid.swapping { opacity:0; }
+  .btn-detail { display:block; width:100%; margin-top:auto; text-align:center; padding:13px; border-radius:12px; font-weight:600; font-size:14px; cursor:pointer; font-family:inherit; transition:filter .2s ease, transform .15s ease; }
   .btn-detail:hover { filter:brightness(1.06); transform:translateY(-1px); }
   .btn-detail:active { transform:translateY(0); }
 
@@ -549,7 +557,7 @@
           </div>
         </div>
         <p style="font-size:11.5px; color:#9a9082; margin-top:9px; line-height:1.5;">*Hệ số: móng 50% + bán hầm 150% / full hầm 200% + 100%/tầng cơ bản (trệt/lầu) + tầng lửng 70% + tầng tum/mái BTCT 50%. Hệ số thực tế thay đổi theo loại móng & độ sâu hầm & loại mái — xem bảng “Cách tính diện tích” bên dưới.</p>
-        <a href="#lienhe" style="display:block; margin-top:14px; text-align:center; background:#b3925e; color:#fff; padding:15px; border-radius:12px; font-size:15px; font-weight:700; text-decoration:none; animation:pulseGold 2.4s infinite;">Nhận báo giá chi tiết cho lô đất của tôi →</a>
+        <button type="button" id="ktBtn" style="display:block; width:100%; box-sizing:border-box; margin-top:14px; text-align:center; background:#b3925e; color:#fff; padding:15px; border-radius:12px; font-size:15px; font-weight:700; border:none; cursor:pointer; font-family:inherit; animation:pulseGold 2.4s infinite;">Xem báo giá chi tiết cho lô đất của tôi →</button>
       </div>
 
     </div>
@@ -569,7 +577,9 @@
   <section id="baogia" style="max-width:1200px; margin:0 auto; padding:80px 24px 40px;">
     <div style="text-align:center; margin-bottom:14px;"><span style="font-size:13px; font-weight:700; letter-spacing:2px; color:#b3925e;">ĐƠN GIÁ THAM KHẢO 2025</span></div>
     <h2 class="section-h2" style="font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:40px; font-weight:700; text-align:center; margin-bottom:12px;">Chọn gói xây dựng phù hợp</h2>
-    <p style="text-align:center; color:#7a7267; max-width:560px; margin:0 auto 32px; font-size:16px;">Đơn giá tính trên m² diện tích xây dựng, đã bao gồm vật tư & nhân công theo gói. Báo giá cuối cùng được chốt sau khảo sát thực tế.</p>
+    <p style="text-align:center; color:#7a7267; max-width:560px; margin:0 auto 24px; font-size:16px;">Đơn giá tính trên m² diện tích xây dựng, đã bao gồm vật tư & nhân công theo gói. Báo giá cuối cùng được chốt sau khảo sát thực tế.</p>
+
+    <div id="pkTitle" style="text-align:center; margin-bottom:16px; font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:20px; font-weight:700; color:#193544;">Bảng giá gói <span style="color:#b3925e;">Tiêu chuẩn</span></div>
 
     <!-- THANG TRƯỢT SỐ TIỀN → gợi ý gói phù hợp -->
     <div style="max-width:640px; margin:0 auto 46px; background:#fff; border:1px solid rgba(43,38,32,.1); border-radius:18px; padding:24px 28px; box-shadow:0 16px 36px -22px rgba(0,0,0,.35);">
@@ -579,10 +589,21 @@
       </div>
       <input id="budgetRange" type="range" min="3800000" max="9600000" step="100000" value="6800000" style="width:100%; accent-color:#b3925e; cursor:pointer;">
       <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:#9a9082;">
-        <span>3,8tr</span><span>Hoàn thiện</span><span>9,6tr</span>
+        <span id="budgetLo">3,8tr</span><span>Hoàn thiện</span><span id="budgetHi">9,6tr</span>
       </div>
       <div style="margin-top:16px; text-align:center; font-size:14.5px; color:#4a4438;">Gói phù hợp với ngân sách: <b id="budgetPkgName" style="color:#193544;">Hoàn thiện cơ bản</b></div>
     </div>
+
+    <!-- Tabs phân khúc: lướt Tiêu chuẩn ↔ Cao cấp -->
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:10px;">
+      <button class="pk-arrow" id="pkPrev" type="button" aria-label="Phân khúc trước">‹</button>
+      <div class="pk-tabs">
+        <button class="pk-tab on" type="button" data-pk="tc">Tiêu chuẩn</button>
+        <button class="pk-tab" type="button" data-pk="cc">Cao cấp</button>
+      </div>
+      <button class="pk-arrow" id="pkNext" type="button" aria-label="Phân khúc sau">›</button>
+    </div>
+    <p style="text-align:center; color:#9a9082; font-size:12.5px; margin:0 0 26px;">Vuốt hoặc chọn phân khúc vật tư để xem bảng giá tương ứng</p>
 
     <div class="price-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px;">
       <!-- Gói 1: THÔ -->
@@ -590,7 +611,7 @@
         <div class="suggest-badge">✓ Gợi ý cho bạn</div>
         <div class="p-eyebrow">THÔ</div>
         <div class="p-sub">Bao gồm Kết cấu + Xây tô + MEP âm</div>
-        <div class="p-price-row"><span class="p-price">3.800.000</span><span class="p-unit">đ/m²</span></div>
+        <div class="p-price-row"><span class="p-from">từ </span><span class="p-price">3.800.000</span><span class="p-unit">đ/m²</span></div>
         <div class="p-feats">
           <div>✓ <b>Kết cấu:</b> Móng, cột, dầm, sàn bê tông</div>
           <div>✓ <b>Xây tô:</b> Xây tường ngăn, tô trát trong/ngoài</div>
@@ -605,7 +626,7 @@
         <div class="suggest-badge">✓ Gợi ý cho bạn</div>
         <div class="p-eyebrow">HOÀN THIỆN CƠ BẢN</div>
         <div class="p-sub">Bao gồm Thô + Vật tư hoàn thiện + Nhân công hoàn thiện · Chưa nội thất</div>
-        <div class="p-price-row"><span class="p-price">6.800.000</span><span class="p-unit">đ/m²</span></div>
+        <div class="p-price-row"><span class="p-from">từ </span><span class="p-price">6.800.000</span><span class="p-unit">đ/m²</span></div>
         <div class="p-feats">
           <div>✓ <b>Sơn nước:</b> Trọn gói bột bả, sơn lót, sơn phủ</div>
           <div>✓ <b>Ốp lát:</b> Gạch nền, gạch WC, sàn gỗ</div>
@@ -621,7 +642,7 @@
         <div class="suggest-badge">✓ Gợi ý cho bạn</div>
         <div class="p-eyebrow">TRỌN GÓI</div>
         <div class="p-sub">Bao gồm Thô + Hoàn thiện + Nội thất</div>
-        <div class="p-price-row"><span class="p-price">8.400.000</span><span class="p-unit">đ/m²</span></div>
+        <div class="p-price-row"><span class="p-from">từ </span><span class="p-price">8.400.000</span><span class="p-unit">đ/m²</span></div>
         <div class="p-feats">
           <div>✓ <b>Nội thất cố định:</b> Tủ bếp (trên/dưới), tủ quần áo, tủ giày</div>
           <div>✓ <b>Nội thất rời:</b> Sofa, bàn trà, kệ tivi, bộ bàn ăn, giường ngủ, tab đầu giường</div>
@@ -650,6 +671,26 @@
       <div class="dq-notes" id="dqNotes"></div>
       <div class="dq-foot">
         <a href="#lienhe" class="dq-cta" id="dqCta">Nhận báo giá cho lô đất của tôi →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL KHÁI TOÁN SƠ BỘ ===== -->
+  <div class="dq-overlay" id="ktOverlay" role="dialog" aria-modal="true">
+    <div class="dq-modal">
+      <div class="dq-head" style="background:linear-gradient(135deg,#1d3d4e,#12242e);">
+        <button type="button" class="dq-close" id="ktClose" aria-label="Đóng">&times;</button>
+        <div style="font-size:12px; font-weight:700; letter-spacing:1.5px; opacity:.8;">KHÁI TOÁN SƠ BỘ</div>
+        <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-top:8px;">
+          <span style="font-size:14px; opacity:.85;">Chi phí dự kiến</span>
+          <h3 id="ktTotal" style="font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:30px; font-weight:700; color:#fff;">≈ 0</h3>
+        </div>
+        <div id="ktSub" style="font-size:13px; opacity:.85; margin-top:4px;"></div>
+      </div>
+      <div class="dq-body" id="ktBody"></div>
+      <div class="dq-foot">
+        <button type="button" class="dq-cta" id="ktMaterial" style="flex:1; min-width:170px; background:#fff; color:#193544; border:1.5px solid #193544;">Xem chi tiết vật tư</button>
+        <a href="https://dezon.vn/planning/" target="_blank" rel="noopener" class="dq-cta" id="ktLead" style="flex:1; min-width:170px;">Nhận báo giá đầy đủ →</a>
       </div>
     </div>
   </div>
@@ -1014,6 +1055,7 @@
 
   // ---- State ----
   var state = { area: 80, floors: 3, ham: 0, lung: 0, tum: 0, tier: 'tc', type: 1, level: 0, filter: 'all', hesoOpen: false };
+  var lastCalc = { heso: 3.5, dt: 280, gia: 6800000, total: 1904000000, isTC: true };
 
   // ---- Helpers ----
   function fmtTy(n){
@@ -1057,6 +1099,7 @@
     var gia = isTC ? PRICE_MATRIX.tc[s.type][0] : PRICE_MATRIX.cc[s.type];
     var total = dt * gia;
     var pre = isTC ? '' : 'từ ';
+    lastCalc = { heso: heso, dt: dt, gia: gia, total: total, isTC: isTC };
 
     $('areaLabel').textContent = s.area;
     $('floorLabel').textContent = s.floors;
@@ -1079,12 +1122,22 @@
     mark('.type-btn', function(b){ return Number(b.getAttribute('data-type')) === s.type; });
   }
 
-  // ---- Thang trượt số tiền → gợi ý gói phù hợp (độc lập với tool tính giá) ----
+  // ---- Thanh trượt ngân sách + Phân khúc bảng giá (lướt Tiêu chuẩn ↔ Cao cấp) ----
   var budgetRange = $('budgetRange');
+  var cardPk = 'tc';
+  var CARD_PRICES = {
+    tc: ['3.800.000', '6.800.000', '8.400.000'],
+    cc: ['5.000.000', '10.000.000', '15.000.000']
+  };
+  // Dải giá + ngưỡng chia gói theo từng phân khúc
+  var BUDGET_CFG = {
+    tc: { min: 3800000,  max: 9600000,  def: 6800000,  step: 100000, t1: 5700000,  t2: 8100000,  lo: '3,8tr', hi: '9,6tr' },
+    cc: { min: 5000000,  max: 30000000, def: 10000000, step: 500000, t1: 7000000,  t2: 15000000, lo: '5tr',   hi: '30tr' }
+  };
   function applyBudget(){
+    var cfg = BUDGET_CFG[cardPk];
     var v = Number(budgetRange.value);
-    // Ngưỡng: <5,7tr = Thô · 5,7–8,1tr = Hoàn thiện cơ bản · ≥8,1tr = Trọn gói
-    var idx = v < 5700000 ? 0 : (v < 8100000 ? 1 : 2);
+    var idx = v < cfg.t1 ? 0 : (v < cfg.t2 ? 1 : 2);   // 0 Thô · 1 Hoàn thiện · 2 Trọn gói
     $('budgetValue').textContent = v.toLocaleString('vi-VN');
     $('budgetPkgName').textContent = CARD_NAMES[idx];
     Array.prototype.forEach.call(document.querySelectorAll('.price-card'), function(card, i){
@@ -1092,7 +1145,48 @@
     });
   }
   budgetRange.addEventListener('input', applyBudget);
-  applyBudget();
+
+  function applyPhanKhuc(pk){
+    if (pk !== 'tc' && pk !== 'cc') return;
+    cardPk = pk;
+    // Đổi dải thanh trượt theo phân khúc (Tiêu chuẩn 3,8–9,6tr · Cao cấp 5–30tr)
+    var cfg = BUDGET_CFG[pk];
+    budgetRange.min = cfg.min; budgetRange.max = cfg.max; budgetRange.step = cfg.step; budgetRange.value = cfg.def;
+    $('budgetLo').textContent = cfg.lo; $('budgetHi').textContent = cfg.hi;
+    $('pkTitle').innerHTML = 'Bảng giá gói <span style="color:#b3925e;">' + (pk === 'cc' ? 'Cao cấp' : 'Tiêu chuẩn') + '</span>';
+    applyBudget();
+    // Đổi giá 3 card kèm hiệu ứng mờ
+    var grid = document.querySelector('.price-grid');
+    grid.classList.add('swapping');
+    setTimeout(function(){
+      var prices = document.querySelectorAll('.price-grid .p-price');
+      var froms  = document.querySelectorAll('.price-grid .p-from');
+      for (var i = 0; i < prices.length; i++){
+        prices[i].textContent = CARD_PRICES[pk][i];
+        froms[i].style.display = (pk === 'cc') ? 'inline' : 'none';
+      }
+      grid.classList.remove('swapping');
+    }, 180);
+    Array.prototype.forEach.call(document.querySelectorAll('.pk-tab'), function(t){
+      t.classList.toggle('on', t.getAttribute('data-pk') === pk);
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.pk-tab'), function(t){
+    t.addEventListener('click', function(){ applyPhanKhuc(t.getAttribute('data-pk')); });
+  });
+  $('pkPrev').addEventListener('click', function(){ applyPhanKhuc('tc'); });
+  $('pkNext').addEventListener('click', function(){ applyPhanKhuc('cc'); });
+  (function(){
+    var grid = document.querySelector('.price-grid'), x0 = null;
+    grid.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive: true });
+    grid.addEventListener('touchend', function(e){
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) < 45) return;
+      applyPhanKhuc(dx < 0 ? 'cc' : 'tc');   // vuốt trái → Cao cấp · vuốt phải → Tiêu chuẩn
+    }, { passive: true });
+  })();
+  applyBudget();   // khởi tạo
 
   $('areaRange').addEventListener('input', function(e){ state.area = Number(e.target.value); renderCalc(); });
   $('incFloor').addEventListener('click', function(){ state.floors = Math.min(state.floors + 1, 6); renderCalc(); });
@@ -1243,6 +1337,76 @@
   document.getElementById('dqCta').addEventListener('click', closeDetail);
   dqOverlay.addEventListener('click', function(e){ if(e.target === dqOverlay) closeDetail(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeDetail(); });
+
+  // ---- Khái toán sơ bộ (popup từ nút CTA máy tính) ----
+  var SCOPE = {
+    0: ['<b>Kết cấu:</b> Móng, cột, dầm, sàn bê tông', '<b>Xây tô:</b> Xây tường ngăn, tô trát trong/ngoài', '<b>M&amp;E:</b> Đi ống âm tường/sàn hệ điện nước', '<b>Chống thấm:</b> Sàn WC, ban công, sân thượng, mái'],
+    1: ['<b>Sơn nước:</b> Trọn gói bột bả, sơn lót, sơn phủ', '<b>Ốp lát:</b> Gạch nền, gạch WC, sàn gỗ', '<b>Trần &amp; Thang:</b> Trần thạch cao, đá/tay vịn cầu thang', '<b>Hệ thống cửa:</b> Cửa chính, cửa phòng, cửa WC, cửa sổ', '<b>Thiết bị:</b> Thiết bị điện, đèn chiếu sáng, thiết bị vệ sinh', '<b>Nhân công hoàn thiện:</b> Ốp lát, sơn nước, lắp thiết bị'],
+    2: ['<b>Nội thất cố định:</b> Tủ bếp (trên/dưới), tủ quần áo, tủ giày', '<b>Nội thất rời:</b> Sofa, bàn trà, kệ tivi, bộ bàn ăn, giường ngủ, tab đầu giường', '<b>Tiện ích:</b> Rèm cửa 2 lớp']
+  };
+  var TYPE_FULL = ['Thô', 'Hoàn thiện cơ bản', 'Trọn gói'];
+  var TIER_FULL = { tc: 'Tiêu chuẩn', cc: 'Cao cấp' };
+  function quyMoText(){
+    var t = state.floors + ' tầng';
+    if (state.ham === 1.5) t += ' · Bán hầm'; else if (state.ham === 2) t += ' · Full hầm';
+    if (state.lung) t += ' · Tầng lửng';
+    if (state.tum) t += ' · Tầng tum (mái)';
+    return t;
+  }
+  function ktRow(k, v){ return '<div class="dq-row"><div class="k">' + k + '</div><div class="v" style="text-align:right; font-weight:700; color:#193544;">' + v + '</div></div>'; }
+  var ktOverlay = document.getElementById('ktOverlay');
+  function openKhaiToan(){
+    var c = lastCalc, s = state;
+    var pre = c.isTC ? '' : 'từ ';
+    var vnd = function(n){ return Math.round(n).toLocaleString('vi-VN'); };
+    var m2  = function(n){ return n.toLocaleString('vi-VN', { maximumFractionDigits: 0 }); };
+    document.getElementById('ktTotal').textContent = (c.isTC ? '≈ ' : 'từ ') + fmtTy(c.total);
+    document.getElementById('ktSub').textContent = 'Gói ' + TYPE_FULL[s.type] + ' · Phân khúc ' + TIER_FULL[s.tier];
+
+    // Thông số đầu vào
+    var head = '<div style="display:flex; justify-content:space-between; font-size:13px; color:#7a7267; padding:4px 0;"><span>Diện tích 1 sàn</span><b style="color:#193544;">' + s.area + ' m²</b></div>' +
+               '<div style="display:flex; justify-content:space-between; font-size:13px; color:#7a7267; padding:4px 0;"><span>Quy mô</span><b style="color:#193544;">' + quyMoText() + '</b></div>' +
+               '<div style="display:flex; justify-content:space-between; font-size:13px; color:#7a7267; padding:4px 0;"><span>Đơn giá (' + TYPE_FULL[s.type] + ' · ' + TIER_FULL[s.tier] + ')</span><b style="color:#193544;">' + pre + vnd(c.gia) + ' đ/m²</b></div>';
+
+    // Diễn giải chi phí theo từng phần: DT 1 sàn × hệ số × đơn giá
+    var comps = [{ label: 'Móng (50%)', hs: 0.5 }, { label: 'Sàn ' + s.floors + ' tầng (100%/tầng)', hs: s.floors * 1.0 }];
+    if (s.ham === 1.5) comps.push({ label: 'Bán hầm (150%)', hs: 1.5 });
+    else if (s.ham === 2) comps.push({ label: 'Full hầm (200%)', hs: 2.0 });
+    if (s.lung) comps.push({ label: 'Tầng lửng (70%)', hs: 0.7 });
+    if (s.tum) comps.push({ label: 'Tầng tum / mái (50%)', hs: 0.5 });
+
+    var brk = '<div style="margin-top:15px; font-size:13px; font-weight:800; color:#193544;">📐 Cách tính chi phí</div>' +
+              '<div style="font-size:11.5px; color:#9a9082; margin:2px 0 4px;">Mỗi phần = DT 1 sàn (' + s.area + ' m²) × hệ số × đơn giá</div>';
+    for (var j = 0; j < comps.length; j++){
+      var dtp = s.area * comps[j].hs, cost = dtp * c.gia;
+      brk += '<div style="display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-top:1px solid #eee7db; font-size:13.5px;">' +
+               '<span style="color:#4a4438;">' + comps[j].label + ' · <span style="color:#9a9082;">' + m2(dtp) + ' m²</span></span>' +
+               '<b style="white-space:nowrap; color:#193544;">' + pre + vnd(cost) + ' đ</b></div>';
+    }
+    brk += '<div style="display:flex; justify-content:space-between; gap:10px; padding:12px 0 2px; margin-top:4px; border-top:2px solid #193544; font-size:14.5px;">' +
+             '<span style="font-weight:800; color:#193544;">Tổng · ' + m2(c.dt) + ' m² xây dựng</span>' +
+             '<b style="white-space:nowrap; color:#b3925e; font-size:17px;">' + pre + fmtTy(c.total) + '</b></div>';
+
+    // Gói bao gồm (tích luỹ theo hạng mục)
+    var scope = SCOPE[0].slice();
+    if (s.type >= 1) scope = scope.concat(SCOPE[1]);
+    if (s.type >= 2) scope = scope.concat(SCOPE[2]);
+    var scopeHtml = '<div style="margin-top:18px; font-size:13px; font-weight:800; color:#193544;">📋 Gói ' + TYPE_FULL[s.type] + ' bao gồm</div>' +
+                    '<div style="padding:10px 0 4px; display:flex; flex-direction:column; gap:9px; font-size:13.5px; color:#4a4438; line-height:1.45;">';
+    for (var i = 0; i < scope.length; i++){ scopeHtml += '<div>✓ ' + scope[i] + '</div>'; }
+    scopeHtml += '</div>';
+
+    document.getElementById('ktBody').innerHTML = head + brk + scopeHtml;
+    ktOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeKt(){ ktOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+  document.getElementById('ktBtn').addEventListener('click', openKhaiToan);
+  document.getElementById('ktClose').addEventListener('click', closeKt);
+  document.getElementById('ktLead').addEventListener('click', closeKt);
+  document.getElementById('ktMaterial').addEventListener('click', function(){ closeKt(); openDetail(state.tier === 'cc' ? 'premium' : 'standard'); });
+  ktOverlay.addEventListener('click', function(e){ if(e.target === ktOverlay) closeKt(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeKt(); });
 
   // ---- Initial render ----
   renderCalc();
