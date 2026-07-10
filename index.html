@@ -68,6 +68,8 @@
   .card-active .btn-detail { background:#b3925e !important; border-color:#b3925e !important; color:#fff !important; }
   /* 3 card ngang hàng — không nhô lệch. Chỉ nhấc nhẹ khi rê chuột */
   .price-card:hover { transform: translateY(-8px); box-shadow: 0 28px 56px -20px rgba(22,19,15,.5); }
+  .art-banner img { transition: transform .55s ease; }
+  .art-banner:hover img { transform: scale(1.045); }
   /* Tabs phân khúc (lướt Tiêu chuẩn ↔ Cao cấp) */
   .pk-tabs { display:inline-flex; background:#efeae1; border-radius:999px; padding:4px; gap:4px; }
   .pk-tab { border:none; background:none; padding:9px 24px; border-radius:999px; font-size:14px; font-weight:700; color:#7a7267; cursor:pointer; font-family:inherit; transition:background .2s, color .2s; }
@@ -763,21 +765,94 @@
 
   <!-- ===== DỰ ÁN ===== -->
   <section id="duan" style="max-width:1200px; margin:0 auto; padding:80px 24px;">
-    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:36px;">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:28px;">
       <div>
-        <span style="font-size:13px; font-weight:700; letter-spacing:2px; color:#b3925e;">CÔNG TRÌNH THỰC TẾ</span>
-        <h2 class="section-h2" style="font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:40px; font-weight:700; margin-top:10px;">Nhà phố Decox đã hoàn thiện</h2>
+        <span style="font-size:13px; font-weight:700; letter-spacing:2px; color:#b3925e;">CẬP NHẬT MỚI NHẤT</span>
+        <h2 class="section-h2" style="font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:40px; font-weight:700; margin-top:10px;">Bài viết mới từ Decox</h2>
       </div>
-      <p style="max-width:340px; color:#7a7267; font-size:15px; line-height:1.55;">Hình ảnh thực tế công trình nhà phố hiện đại 183m² — Q.5, TP.HCM. Bàn giao trọn gói cả xây dựng lẫn nội thất.</p>
+      <p style="max-width:340px; color:#7a7267; font-size:15px; line-height:1.55;">Các bài viết &amp; công trình được cập nhật trực tiếp từ decoxdesign.com — luôn hiển thị nội dung mới nhất.</p>
     </div>
-    <div class="gallery-grid" style="display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:220px 220px; gap:14px;">
-      <div style="grid-row:span 2; border-radius:18px; background:#ddd4c3 url('https://decoxdesign.com/upload/images/thiet-ke-noi-that-nha-pho-61m2-de200027tc-phong-khach-01-decox-design.jpg') center/cover;"></div>
-      <div style="border-radius:18px; background:#ddd4c3 url('https://decoxdesign.com/upload/images/thiet-ke-noi-that-nha-pho-61m2-de200027tc-phong-bep-04-decox-design.jpg') center/cover;"></div>
-      <div style="border-radius:18px; background:#ddd4c3 url('https://decoxdesign.com/upload/images/thiet-ke-noi-that-nha-pho-61m2-de200027tc-phong-ngu-master-08-decox-design.jpg') center/cover;"></div>
-      <div style="border-radius:18px; background:#ddd4c3 url('https://decoxdesign.com/upload/images/thiet-ke-noi-that-nha-pho-61m2-de200027tc-phong-khach-02-decox-design.jpg') center/cover;"></div>
-      <div style="border-radius:18px; background:#ddd4c3 url('https://decoxdesign.com/upload/images/thiet-ke-noi-that-nha-pho-61m2-de200027tc-phong-bep-05-decox-design.jpg') center/cover;"></div>
+    <div id="artGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px;">
+      <div id="artLoading" style="grid-column:1/-1; text-align:center; color:#9a9186; font-size:15px; padding:40px 0;">
+        <span class="art-spin" style="display:inline-block; width:22px; height:22px; border:3px solid #e6ddd0; border-top-color:#b3925e; border-radius:50%; vertical-align:-5px; margin-right:10px;"></span>
+        Đang tải bài viết mới nhất từ Decox…
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:34px;">
+      <a href="https://decoxdesign.com/tieu-chuan-thi-cong-hang-a" target="_blank" rel="noopener" style="display:inline-block; border:1.5px solid #d9c9ae; color:#8a6f43; padding:13px 32px; border-radius:999px; font-weight:700; font-size:15px; text-decoration:none;">Xem tất cả bài viết →</a>
     </div>
   </section>
+  <style>
+    @keyframes artspin{to{transform:rotate(360deg)}}
+    .art-spin{animation:artspin .8s linear infinite}
+    .art-card{display:block; text-decoration:none; background:#fff; border-radius:16px; overflow:hidden; border:1px solid #eee5d7; box-shadow:0 10px 30px -22px rgba(0,0,0,.4); transition:transform .3s ease, box-shadow .3s ease;}
+    .art-card:hover{transform:translateY(-6px); box-shadow:0 26px 46px -26px rgba(31,53,68,.5);}
+    .art-card .thumb{position:relative; width:100%; aspect-ratio:16/10; overflow:hidden; background:#f2ece1;}
+    .art-card .thumb img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;}
+    .art-card:hover .thumb img{transform:scale(1.06);}
+    .art-card .tag{position:absolute; top:12px; left:12px; background:rgba(25,53,68,.9); color:#fff; font-size:11px; font-weight:700; letter-spacing:1px; padding:5px 11px; border-radius:999px;}
+    .art-card .body{padding:16px 18px 20px;}
+    .art-card h3{font-family:'Gotham','Montserrat','Be Vietnam Pro',sans-serif; font-size:16px; font-weight:700; color:#1f3544; line-height:1.4; margin:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+    .art-card .more{display:inline-block; margin-top:12px; color:#b3925e; font-weight:700; font-size:13px;}
+  </style>
+  <script>
+  (function(){
+    var BASE='https://decoxdesign.com/';
+    var SOURCES=[BASE+'tieu-chuan-thi-cong-hang-a', BASE];
+    var MAX=9;
+    function abs(u){ try{ return new URL(u, BASE).href; }catch(e){ return u; } }
+    function parseCards(htmlText){
+      var doc=new DOMParser().parseFromString(htmlText,'text/html');
+      var out=[];
+      doc.querySelectorAll('.images a').forEach(function(a){
+        var img=a.querySelector('img'); if(!img) return;
+        var src=img.getAttribute('src')||img.getAttribute('data-src')||img.getAttribute('data-original');
+        var href=a.getAttribute('href'); if(!src||!href) return;
+        if(!/\.html($|\?)/.test(href)) return;               // article pages only
+        var title=(a.getAttribute('title')||img.getAttribute('alt')||'').trim();
+        if(!title) return;
+        out.push({href:abs(href), img:abs(src), title:title});
+      });
+      return out;
+    }
+    function render(cards){
+      var grid=document.getElementById('artGrid');
+      if(!cards.length){ fallback(); return; }
+      grid.innerHTML=cards.map(function(c){
+        return '<a class="art-card" href="'+c.href+'" target="_blank" rel="noopener">'
+          +'<div class="thumb"><span class="tag">DECOX</span>'
+          +'<img loading="lazy" src="'+c.img+'" alt="'+c.title.replace(/"/g,'&quot;')+'"></div>'
+          +'<div class="body"><h3>'+c.title+'</h3><span class="more">Xem bài viết →</span></div></a>';
+      }).join('');
+    }
+    function fallback(){
+      var grid=document.getElementById('artGrid');
+      grid.innerHTML='<div style="grid-column:1/-1; text-align:center; color:#9a9186; padding:20px 0;">Xem các bài viết mới nhất tại <a href="https://decoxdesign.com/tieu-chuan-thi-cong-hang-a" target="_blank" rel="noopener" style="color:#b3925e; font-weight:700;">decoxdesign.com</a></div>';
+    }
+    function load(){
+      Promise.allSettled(SOURCES.map(function(u){
+        return fetch(u,{mode:'cors'}).then(function(r){return r.ok?r.text():'';});
+      })).then(function(res){
+        var all=[], seen={};
+        res.forEach(function(r){
+          if(r.status!=='fulfilled'||!r.value) return;
+          parseCards(r.value).forEach(function(c){
+            var key=c.href.split('#')[0];
+            if(seen[key]) return; seen[key]=1; all.push(c);
+          });
+        });
+        render(all.slice(0,MAX));
+      }).catch(fallback);
+    }
+    if('IntersectionObserver' in window){
+      var sec=document.getElementById('duan'), done=false;
+      var io=new IntersectionObserver(function(en){
+        en.forEach(function(e){ if(e.isIntersecting && !done){ done=true; io.disconnect(); load(); } });
+      },{rootMargin:'300px'});
+      io.observe(sec);
+    } else { load(); }
+  })();
+  </script>
 
   <!-- ===== DỰ ÁN TIÊU BIỂU (DANH SÁCH) ===== -->
   <section id="duan-list" style="background:#ffffff;">
