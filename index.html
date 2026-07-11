@@ -98,12 +98,15 @@
   .dq-row .k { font-weight:700; color:#193544; font-size:13.5px; display:flex; align-items:center; gap:9px; }
   .dq-row .v { color:#4a4438; font-size:13.5px; line-height:1.5; }
   .dq-ico { color:#b3925e; flex-shrink:0; display:inline-flex; }
-  .tho-arrow { width:30px; height:30px; border-radius:50%; border:1.5px solid #d9c9ae; background:#fff; color:#8a6f43; font-size:18px; line-height:1; cursor:pointer; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; transition:all .15s; padding:0; font-family:inherit; }
+  .tho-price-nav { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .tho-price-nav .p-price-row { margin:0; flex:1; min-width:0; }
+  .tho-arrow { width:34px; height:34px; border-radius:50%; border:1.5px solid #e0d6c4; background:#fff; color:#8a6f43; font-size:19px; line-height:1; cursor:pointer; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; transition:all .16s; padding:0; font-family:inherit; box-shadow:0 3px 8px -4px rgba(0,0,0,.25); }
   .tho-arrow:hover { background:#b3925e; border-color:#b3925e; color:#fff; }
-  .tho-meta { display:flex; align-items:center; gap:10px; margin:-4px 0 14px; font-size:12px; color:#9a9082; }
+  .tho-arrow:active { transform:scale(.92); }
+  .tho-meta { display:flex; align-items:center; gap:10px; margin:0 0 20px; font-size:11.5px; font-weight:600; color:#a89c88; letter-spacing:.2px; }
   .tho-dots { display:inline-flex; gap:5px; }
-  .tho-dots i { width:6px; height:6px; border-radius:50%; background:#dcd3c4; display:inline-block; transition:all .18s; }
-  .tho-dots i.on { background:#b3925e; width:16px; border-radius:3px; }
+  .tho-dots i { width:6px; height:6px; border-radius:50%; background:#ddd3c3; display:inline-block; transition:all .2s; }
+  .tho-dots i.on { background:#b3925e; width:18px; border-radius:3px; }
   .dq-notes { background:#f6f2ea; padding:18px 30px 22px; font-size:12.5px; color:#6a6355; line-height:1.7; }
   .dq-notes b { color:#193544; }
   .dq-foot { padding:18px 30px 24px; display:flex; gap:12px; flex-wrap:wrap; }
@@ -619,8 +622,12 @@
         <div class="suggest-badge">✓ Gợi ý cho bạn</div>
         <div class="p-eyebrow">THÔ</div>
         <div class="p-sub">Bao gồm Kết cấu + Xây tô + MEP âm</div>
-        <div class="p-price-row" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><button type="button" class="tho-arrow" id="thoPrev" aria-label="Giá thấp hơn">‹</button><span class="p-from">từ </span><span class="p-price">3.800.000</span><span class="p-unit">đ/m²</span><button type="button" class="tho-arrow" id="thoNext" aria-label="Giá cao hơn">›</button></div>
-        <div class="tho-meta" id="thoMeta"><span class="tho-dots" id="thoDots"></span><span class="tho-count" id="thoCount">Mức 1/7 · vuốt chọn giá</span></div>
+        <div class="tho-price-nav">
+          <button type="button" class="tho-arrow" id="thoPrev" aria-label="Giá thấp hơn">‹</button>
+          <div class="p-price-row"><span class="p-from">từ </span><span class="p-price">3.800.000</span><span class="p-unit">đ/m²</span></div>
+          <button type="button" class="tho-arrow" id="thoNext" aria-label="Giá cao hơn">›</button>
+        </div>
+        <div class="tho-meta" id="thoMeta"><span class="tho-dots" id="thoDots"></span><span class="tho-count" id="thoCount">Mức 1/7</span></div>
         <div class="p-feats">
           <div>✓ <b>Kết cấu:</b> Móng, cột, dầm, sàn bê tông</div>
           <div>✓ <b>Xây tô:</b> Xây tường ngăn, tô trát trong/ngoài</div>
@@ -1364,7 +1371,12 @@
       if (prev) prev.style.display = next.style.display = 'inline-flex';
       var dots = ''; for (var i=0;i<THO7.length;i++) dots += '<i class="'+(i===thoIdx?'on':'')+'"></i>';
       $('thoDots').innerHTML = dots;
-      $('thoCount').textContent = 'Mức '+(thoIdx+1)+'/'+THO7.length+' · vuốt chọn giá';
+      $('thoCount').textContent = 'Mức '+(thoIdx+1)+'/'+THO7.length;
+      // Hoàn thiện = Thô + 2tr · Trọn gói = Thô + 4tr (cập nhật theo mức đang chọn)
+      var base = Number(THO7[thoIdx].price.replace(/\./g,''));
+      var allP = document.querySelectorAll('.price-grid .p-price');
+      if (allP[1]) allP[1].textContent = (base + 2000000).toLocaleString('vi-VN');
+      if (allP[2]) allP[2].textContent = (base + 4000000).toLocaleString('vi-VN');
     } else {
       if (meta) meta.style.display = 'none';
       if (prev) prev.style.display = next.style.display = 'none';
@@ -1695,6 +1707,10 @@
     var d;
     if (tier==='tc' && type===0){
       d = { price: THO7[thoIdx].price + ' đ/m²', desc:'Danh mục vật tư phần thô · Tiêu chuẩn (mức '+(thoIdx+1)+'/'+THO7.length+')', rows: THO7[thoIdx].rows };
+    } else if (tier==='tc' && (type===1 || type===2)){
+      var b = Number(THO7[thoIdx].price.replace(/\./g,'')) + (type===1 ? 2000000 : 4000000);
+      var od = DQ.tc[DQ_TYPE_KEY[type]];
+      d = { price: b.toLocaleString('vi-VN') + ' đ/m²', desc: od.desc, rows: od.rows, empty: od.empty };
     } else {
       d = DQ[tier][DQ_TYPE_KEY[type]];
     }
