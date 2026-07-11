@@ -1472,7 +1472,7 @@
     ['Mái kính mở hắt tự động','AGS AGS-R30 · khung sắt 42×170×2mm, motor dây xích'],
     ['Vệ sinh bàn giao','Vệ sinh thô (2 lần) + vệ sinh tinh trước bàn giao']
   ];
-  var DQ_HT_CC = [
+  var DQ_TG_TC = [
     ['TRẦN THẠCH CAO',''],
     ['Trần thạch cao','Vĩnh Tường khung chìm Alpha hoặc Basi, tấm Gyproc Siêu bền X 9mm'],
     ['Trần thạch cao (vệ sinh)','Vĩnh Tường khung chìm Alpha hoặc Basi, tấm Gyproc siêu chống ẩm 9mm'],
@@ -1494,9 +1494,9 @@
     ['Keo dán gạch','Webertai fix (Pháp / SX Việt Nam)'],
     ['Keo chà ron','Weber classic (Pháp / SX Việt Nam)'],
     ['CỬA CHÍNH, CỬA ĐI',''],
-    ['Cửa chính trượt 2 ray','Khung nhôm hệ Nexsta do YKK AP tự luyện, tay nắm âm, khóa sò cao cấp · Kính Solar Control Xám 12mm · Màu Anodized Plus YK1N (Black) · Xuất xứ Japan'],
-    ['Cửa đi','Khung nhôm hệ Nexsta do YKK AP tự luyện, tay nắm âm, khóa sò cao cấp · Kính Solar Control Xám 12mm · Màu Anodized Plus YK1N (Black) · Xuất xứ Japan'],
-    ['Cửa sổ','Khung nhôm hệ Nexsta do YKK AP tự luyện, tay nắm âm, khóa sò cao cấp · Kính Solar Control Xám 12mm · Màu Anodized Plus YK1N (Black) · Xuất xứ Japan'],
+    ['Cửa chính trượt 2 ray','Khung nhôm hệ Nexsta do YKK AP tự luyện, tay nắm âm, khóa sò cao cấp, bánh xe lùa chính xác cao, phụ kiện chống nhấc cánh, phụ kiện chêm kính, van thoát nước do YKK AP sản xuất đồng bộ · Kính Solar Control Xám 12mm · Màu Anodized Plus YK1N (Black) · Xuất xứ Japan'],
+    ['Cửa đi','Khung nhôm hệ Nexsta do YKK AP tự luyện, tay nắm âm, khóa sò cao cấp, bánh xe lùa chính xác cao, phụ kiện chống nhấc cánh, phụ kiện chêm kính, van thoát nước do YKK AP sản xuất đồng bộ · Kính Solar Control Xám 12mm · Màu Anodized Plus YK1N (Black) · Xuất xứ Japan'],
+    ['Cửa sổ','Khung nhôm hệ Nexsta do YKK AP tự luyện, tay nắm âm, khóa sò cao cấp, bánh xe lùa chính xác cao, phụ kiện chống nhấc cánh, phụ kiện chêm kính, van thoát nước do YKK AP sản xuất đồng bộ · Kính Solar Control Xám 12mm · Màu Anodized Plus YK1N (Black) · Xuất xứ Japan'],
     ['Khóa cửa chính','Yale YDMA 100NP · vân tay + PIN (Italy)'],
     ['Cửa phòng','Gỗ nhựa Composite ApexDoor · phụ kiện Hafele (bản lề 921.17.142, chặn cửa 489.70.246)'],
     ['Tay nắm cửa phòng','Hafele 499.62.504 (tay gạt + thân khóa + ruột khóa)'],
@@ -1554,12 +1554,12 @@
     tc: {
       tho: { price:'3.800.000 đ/m²', desc:'Danh mục vật tư phần thô · Tiêu chuẩn', rows: DQ_THO_TC },
       ht:  { price:'6.800.000 đ/m²', desc:'Danh mục vật tư hoàn thiện · Tiêu chuẩn', rows: DQ_HT_TC },
-      tg:  { price:'8.400.000 đ/m²', desc:'Danh mục vật tư trọn gói · Tiêu chuẩn', rows: DQ_HT_TC }
+      tg:  { price:'8.400.000 đ/m²', desc:'Danh mục vật tư trọn gói · Tiêu chuẩn', rows: DQ_TG_TC }
     },
     cc: {
       tho: { price:'từ 5.000.000 đ/m²', desc:'Danh mục vật tư phần thô · Cao cấp', rows: DQ_THO_CC },
-      ht:  { price:'từ 10.000.000 đ/m²', desc:'Danh mục vật tư hoàn thiện · Cao cấp', rows: DQ_HT_CC },
-      tg:  { price:'từ 15.000.000 đ/m²', desc:'Danh mục vật tư trọn gói · Cao cấp', rows: DQ_HT_CC }
+      ht:  { price:'từ 10.000.000 đ/m²', desc:'Danh mục vật tư hoàn thiện · Cao cấp', empty:true },
+      tg:  { price:'từ 15.000.000 đ/m²', desc:'Danh mục vật tư trọn gói · Cao cấp', empty:true }
     }
   };
   var DQ_TYPE_KEY = ['tho','ht','tg'];
