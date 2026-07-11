@@ -98,6 +98,14 @@
   .dq-row .k { font-weight:700; color:#193544; font-size:13.5px; display:flex; align-items:center; gap:9px; }
   .dq-row .v { color:#4a4438; font-size:13.5px; line-height:1.5; }
   .dq-ico { color:#b3925e; flex-shrink:0; display:inline-flex; }
+  .tho-sel { padding:16px 30px 6px; display:flex; flex-direction:column; gap:12px; }
+  .tho-sel-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .tho-sel-lb { font-size:12px; font-weight:700; letter-spacing:.4px; color:#8a8172; min-width:104px; text-transform:uppercase; }
+  .tho-chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .tho-chip { border:1.5px solid #dcd3c4; background:#fff; color:#5a5346; padding:8px 18px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; transition:all .18s ease; }
+  .tho-chip:hover { border-color:#b3925e; color:#193544; }
+  .tho-chip.on { background:#193544; border-color:#193544; color:#fff; }
+  @media (max-width:560px){ .tho-sel{ padding-left:20px; padding-right:20px; } .tho-sel-lb{ min-width:0; } }
   .dq-notes { background:#f6f2ea; padding:18px 30px 22px; font-size:12.5px; color:#6a6355; line-height:1.7; }
   .dq-notes b { color:#193544; }
   .dq-foot { padding:18px 30px 24px; display:flex; gap:12px; flex-wrap:wrap; }
@@ -668,6 +676,7 @@
         </div>
         <div id="dqDesc" style="font-size:13px; opacity:.85; margin-top:4px;"></div>
       </div>
+      <div id="dqOpt"></div>
       <div style="padding:16px 30px 4px; font-size:13px; font-weight:700; color:#193544; letter-spacing:.3px;">🧱 Quy cách vật tư trong gói</div>
       <div class="dq-body" id="dqBody"></div>
       <div class="dq-notes" id="dqNotes"></div>
@@ -1576,8 +1585,120 @@
     '• Báo giá mang tính tham khảo, chốt chính thức sau khi thống nhất phạm vi thi công.';
 
   var dqOverlay = document.getElementById('dqOverlay');
+  // ---- Gói Xây thô (Tiêu chuẩn) — nhiều lựa chọn cho khách ----
+  var THO_ROWS = {
+    dandung: {
+      basic: [
+        ['Xi măng','Insee PCB40 đa dụng'],
+        ['Cát xây tô','Cát địa phương'],
+        ['Đá','Đá Bình Điền hoặc địa phương'],
+        ['Gạch xây','Tuynel Bình Dương, Đồng Nai · Loại B'],
+        ['Thép xây dựng','Việt Nhật CB30'],
+        ['Bê tông','Bê tông thương phẩm đá đen (hoặc trộn tại chỗ)'],
+        ['Ván coppha','Ván gỗ, ván ép'],
+        ['Chống thấm','SikaTop Seal 107'],
+        ['Ống nước','Bình Minh (áp lực ≥ theo thiết kế) · Cấp nước nóng PP-R'],
+        ['Dây điện','Cáp đơn Cadivi CV (vỏ cách điện PVC)'],
+        ['Dây tín hiệu','Cat6 FTP Pro'],
+        ['Ống luồn dây','Sino · MPE'],
+        ['Đế âm tường','Sino Vanlock'],
+        ['Cọc tiếp địa','Mạ đồng'],
+        ['Nẹp tô tường','Không'],
+        ['Bồn tự hoại','Composite Đại Thành 1500L']
+      ],
+      standard: [
+        ['Xi măng','Insee PCB40 đa dụng'],
+        ['Cát xây tô','Cát vàng'],
+        ['Đá','Đá Đồng Nai hoặc địa phương'],
+        ['Gạch xây','Tuynel Bình Dương, Đồng Nai · Loại A'],
+        ['Thép xây dựng','Việt Nhật CB30'],
+        ['Bê tông','Bê tông thương phẩm đá xám (hoặc trộn tại chỗ)'],
+        ['Ván coppha','Coppha phủ phim'],
+        ['Chống thấm','SikaTop Seal 107'],
+        ['Ống nước','Bình Minh (áp lực ≥ theo thiết kế) · Cấp nước nóng PP-R'],
+        ['Dây điện','Cáp đơn Cadivi CV (vỏ cách điện PVC)'],
+        ['Dây tín hiệu','Cat6e FTP Commscope'],
+        ['Ống luồn dây','Sino · MPE'],
+        ['Đế âm tường','Sino Vanlock'],
+        ['Cọc tiếp địa','Đồng thau'],
+        ['Nẹp tô tường','Có'],
+        ['Bồn tự hoại','Composite Đại Thành 2000L']
+      ]
+    },
+    dichvu: {
+      basic: [
+        ['Xi măng','Insee PCB40 đa dụng'],
+        ['Cát xây tô','Cát địa phương'],
+        ['Đá','Đá Bình Điền hoặc địa phương'],
+        ['Gạch xây','Tuynel Bình Dương, Đồng Nai · Loại B'],
+        ['Thép xây dựng','Việt Nhật CB30'],
+        ['Bê tông','Bê tông thương phẩm đá đen (hoặc trộn tại chỗ)'],
+        ['Ván khuôn','Ván gỗ, ván ép'],
+        ['Chống thấm','SikaTop Seal 107'],
+        ['Ống nước','Bình Minh (áp lực ≥ theo thiết kế) · Cấp nước nóng PP-R'],
+        ['Ống luồn dây','Sino · MPE'],
+        ['Cọc tiếp địa','Mạ đồng'],
+        ['Nẹp tô tường','Không'],
+        ['Bồn tự hoại','Composite Đại Thành 1500L']
+      ],
+      standard: [
+        ['Xi măng','Insee PCB40 đa dụng'],
+        ['Cát xây tô','Cát vàng'],
+        ['Đá','Đá Đồng Nai hoặc địa phương'],
+        ['Gạch xây','Tuynel Bình Dương, Đồng Nai · Loại A'],
+        ['Thép xây dựng','Việt Nhật CB30, CB400V, CB240-T · theo thiết kế'],
+        ['Bê tông','Bê tông thương phẩm đá xám (hoặc trộn tại chỗ)'],
+        ['Ván khuôn','Coppha phủ phim'],
+        ['Chống thấm','SikaTop Seal 107'],
+        ['Ống nước','Bình Minh (áp lực ≥ theo thiết kế) · Cấp nước nóng PP-R'],
+        ['Ống luồn dây','Sino · MPE'],
+        ['Cọc tiếp địa','Đồng thau'],
+        ['Nẹp tô tường','Có'],
+        ['Bồn tự hoại','Composite Đại Thành 2000L']
+      ]
+    }
+  };
+  var THO_META = {
+    dandung: { label:'Dân dụng', apply:'Áp dụng từ tháng 05/2026', basic:'3.999.000 đ/m²', standard:'4.199.000 đ/m²' },
+    dichvu:  { label:'Dịch vụ',  apply:'Áp dụng từ tháng 04/2026', basic:'4.099.000 đ/m²', standard:'4.299.000 đ/m²' }
+  };
+  var thoSel = { bt:'dandung', lv:'standard' };
+  function thoChips(group, cur, opts){
+    return opts.map(function(o){
+      return '<button type="button" class="tho-chip'+(o.v===cur?' on':'')+'" data-g="'+group+'" data-v="'+o.v+'">'+o.t+'</button>';
+    }).join('');
+  }
+  function renderThoTC(){
+    var m = THO_META[thoSel.bt];
+    var rowsData = THO_ROWS[thoSel.bt][thoSel.lv];
+    var lvName = thoSel.lv==='basic' ? 'Cơ bản' : 'Tiêu chuẩn';
+    document.getElementById('dqTag').textContent = 'VẬT TƯ · XÂY THÔ';
+    document.getElementById('dqTitle').textContent = 'Gói Xây thô';
+    document.getElementById('dqPrice').textContent = m[thoSel.lv];
+    document.getElementById('dqDesc').textContent = 'Công trình ' + m.label + ' · Gói ' + lvName + ' · ' + m.apply;
+    document.getElementById('dqHead').style.background = 'linear-gradient(135deg,#1d3d4e,#12242e)';
+    document.getElementById('dqOpt').innerHTML =
+      '<div class="tho-sel">'
+      + '<div class="tho-sel-row"><span class="tho-sel-lb">Loại công trình</span><div class="tho-chips">'
+        + thoChips('bt', thoSel.bt, [{v:'dandung',t:'Dân dụng'},{v:'dichvu',t:'Dịch vụ'}]) + '</div></div>'
+      + '<div class="tho-sel-row"><span class="tho-sel-lb">Gói vật tư</span><div class="tho-chips">'
+        + thoChips('lv', thoSel.lv, [{v:'basic',t:'Cơ bản'},{v:'standard',t:'Tiêu chuẩn'}]) + '</div></div>'
+      + '</div>';
+    var rows='';
+    for(var i=0;i<rowsData.length;i++){
+      rows += '<div class="dq-row"><div class="k">'+DQ_CUBE+rowsData[i][0]+'</div><div class="v">'+rowsData[i][1]+'</div></div>';
+    }
+    document.getElementById('dqBody').innerHTML = rows;
+    document.getElementById('dqNotes').innerHTML = DQ_NOTES;
+    Array.prototype.forEach.call(document.querySelectorAll('#dqOpt .tho-chip'), function(c){
+      c.addEventListener('click', function(){ thoSel[c.getAttribute('data-g')] = c.getAttribute('data-v'); renderThoTC(); });
+    });
+  }
+
   function openDetail(tier, type){
     if (!DQ[tier]) tier = 'tc';
+    document.getElementById('dqOpt').innerHTML = '';
+    if (tier==='tc' && type===0){ renderThoTC(); dqOverlay.classList.add('open'); document.body.style.overflow='hidden'; return; }
     var d = DQ[tier][DQ_TYPE_KEY[type]]; if(!d) return;
     document.getElementById('dqTag').textContent = 'VẬT TƯ · ' + DQ_TIER_NM[tier].toUpperCase();
     document.getElementById('dqTitle').textContent = 'Gói ' + DQ_TYPE_NM[type];
