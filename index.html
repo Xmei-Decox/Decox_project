@@ -1552,9 +1552,9 @@
   // Ma trận vật tư: DQ[phân khúc][hạng mục]. rows = danh mục (đã có) · undefined = đang cập nhật · empty:true = để trống
   var DQ = {
     tc: {
-      tho: { price:'3.800.000 đ/m²', desc:'Danh mục vật tư phần thô · Tiêu chuẩn', rows: DQ_THO_TC },
-      ht:  { price:'6.800.000 đ/m²', desc:'Danh mục vật tư hoàn thiện · Tiêu chuẩn', rows: DQ_HT_TC },
-      tg:  { price:'8.400.000 đ/m²', desc:'Danh mục vật tư trọn gói · Tiêu chuẩn', rows: DQ_TG_TC }
+      tho: { price:'3.800.000 đ/m²', desc:'Danh mục vật tư phần thô · Tiêu chuẩn', empty:true },
+      ht:  { price:'6.800.000 đ/m²', desc:'Danh mục vật tư hoàn thiện · Tiêu chuẩn', empty:true },
+      tg:  { price:'8.400.000 đ/m²', desc:'Danh mục vật tư trọn gói · Tiêu chuẩn', empty:true }
     },
     cc: {
       tho: { price:'từ 5.000.000 đ/m²', desc:'Danh mục vật tư phần thô · Cao cấp', rows: DQ_THO_CC },
