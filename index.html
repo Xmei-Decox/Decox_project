@@ -1866,8 +1866,18 @@
   Array.prototype.forEach.call(document.querySelectorAll('.btn-detail'), function(btn){
     btn.addEventListener('click', function(){ openDetail(cardPk, Number(btn.getAttribute('data-type'))); });
   });
-  // ---- Tải PDF (chụp đúng giao diện popup → tải file PDF) ----
-  var PDF_LOGO = '<span style="font-family:\'Gotham\',\'Montserrat\',\'Be Vietnam Pro\',sans-serif; font-size:23px; font-weight:800; letter-spacing:2.5px; color:#d9bd93;">DECOX</span>';
+  // ---- Tải PDF: chụp nội dung (ẩn logo) + vẽ logo PNG bằng jsPDF (nét, không smear) ----
+  var LOGO_PNG = null;
+  function makeLogoPng(cb){
+    if (LOGO_PNG){ cb(LOGO_PNG); return; }
+    var im = new Image();
+    im.onload = function(){
+      try { var cv = document.createElement('canvas'); cv.width = 780; cv.height = 165; cv.getContext('2d').drawImage(im, 0, 0, 780, 165); LOGO_PNG = cv.toDataURL('image/png'); } catch(e){ LOGO_PNG = null; }
+      cb(LOGO_PNG);
+    };
+    im.onerror = function(){ cb(null); };
+    im.src = 'decox-logo.svg';
+  }
   function downloadPdf(){
     var overlay = document.querySelector('.dq-overlay.open');
     if (!overlay) return;
@@ -1878,38 +1888,59 @@
     var closeBtn = modal.querySelector('.dq-close');
     var headPdf = modal.querySelector('.dq-head-pdf');
     var logo = modal.querySelector('.dq-logo');
-    // Mở rộng + bỏ bo góc/padding để chụp sát nội dung (không trắng đầu trang, không cắt) + logo dạng text
-    var s = { bMax:body?body.style.maxHeight:'', bOvf:body?body.style.overflow:'', oOvf:overlay.style.overflow, oAlign:overlay.style.alignItems, oPad:overlay.style.padding, mTf:modal.style.transform, mBr:modal.style.borderRadius, mMg:modal.style.margin, scroll:window.pageYOffset, logo:logo?logo.innerHTML:null };
-    if (body){ body.style.maxHeight = 'none'; body.style.overflow = 'visible'; }
-    overlay.style.overflow = 'visible'; overlay.style.alignItems = 'flex-start'; overlay.style.padding = '0';
-    modal.style.transform = 'none'; modal.style.borderRadius = '0'; modal.style.margin = '0';
-    if (foot) foot.style.display = 'none';
-    if (closeBtn) closeBtn.style.visibility = 'hidden';
-    if (headPdf) headPdf.style.visibility = 'hidden';
-    if (logo) logo.innerHTML = PDF_LOGO;
-    window.scrollTo(0,0);
-    modal.offsetHeight; // reflow
-    var name = (overlay.id === 'ktOverlay') ? 'khai-toan-decox.pdf' : 'chi-tiet-vat-tu-decox.pdf';
-    function restore(){
-      if (body){ body.style.maxHeight = s.bMax; body.style.overflow = s.bOvf; }
-      overlay.style.overflow = s.oOvf; overlay.style.alignItems = s.oAlign; overlay.style.padding = s.oPad;
-      modal.style.transform = s.mTf; modal.style.borderRadius = s.mBr; modal.style.margin = s.mMg;
-      if (foot) foot.style.display = '';
-      if (closeBtn) closeBtn.style.visibility = '';
-      if (headPdf) headPdf.style.visibility = '';
-      if (logo && s.logo != null) logo.innerHTML = s.logo;
-      window.scrollTo(0, s.scroll);
-    }
-    setTimeout(function(){
-      html2pdf().set({
-        margin: [8,8,8,8],
-        filename: name,
-        image: { type:'jpeg', quality:0.98 },
-        html2canvas: { scale:2, backgroundColor:'#ffffff', useCORS:true, scrollY:0, scrollX:0 },
-        jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
-        pagebreak: { mode:['css','legacy'] }
-      }).from(modal).save().then(restore, restore);
-    }, 80);
+    makeLogoPng(function(png){
+      var MG = 8;
+      var s = { bMax:body?body.style.maxHeight:'', bOvf:body?body.style.overflow:'', oOvf:overlay.style.overflow, oAlign:overlay.style.alignItems, oPad:overlay.style.padding, mTf:modal.style.transform, mBr:modal.style.borderRadius, mMg:modal.style.margin, scroll:window.pageYOffset, logoVis:logo?logo.style.visibility:'' };
+      if (body){ body.style.maxHeight='none'; body.style.overflow='visible'; }
+      overlay.style.overflow='visible'; overlay.style.alignItems='flex-start'; overlay.style.padding='0';
+      modal.style.transform='none'; modal.style.borderRadius='0'; modal.style.margin='0';
+      if (foot) foot.style.display='none';
+      if (closeBtn) closeBtn.style.visibility='hidden';
+      if (headPdf) headPdf.style.visibility='hidden';
+      window.scrollTo(0,0); modal.offsetHeight;
+      // Đo vị trí LOGO (ảnh, không phải div) sau khi mở rộng — để jsPDF vẽ đúng chỗ
+      var mR = modal.getBoundingClientRect();
+      var lImg = logo ? logo.querySelector('img') : null;
+      var lR = lImg ? lImg.getBoundingClientRect() : null;
+      var modalW = mR.width;
+      var relLeft = lR ? (lR.left - mR.left) : 30;
+      var relTop  = lR ? (lR.top  - mR.top)  : 26;
+      var logoPxW = (lR && lR.width)  ? lR.width  : 113;
+      var logoPxH = (lR && lR.height) ? lR.height : 24;
+      if (logo && png) logo.style.visibility='hidden';   // ẩn để nền navy sạch, jsPDF vẽ logo thật lên
+      modal.offsetHeight;
+      var name = (overlay.id === 'ktOverlay') ? 'khai-toan-decox.pdf' : 'chi-tiet-vat-tu-decox.pdf';
+      function restore(){
+        if (body){ body.style.maxHeight=s.bMax; body.style.overflow=s.bOvf; }
+        overlay.style.overflow=s.oOvf; overlay.style.alignItems=s.oAlign; overlay.style.padding=s.oPad;
+        modal.style.transform=s.mTf; modal.style.borderRadius=s.mBr; modal.style.margin=s.mMg;
+        if (foot) foot.style.display='';
+        if (closeBtn) closeBtn.style.visibility='';
+        if (headPdf) headPdf.style.visibility='';
+        if (logo) logo.style.visibility=s.logoVis;
+        window.scrollTo(0, s.scroll);
+      }
+      setTimeout(function(){
+        html2pdf().set({
+          margin: [MG,MG,MG,MG],
+          filename: name,
+          image: { type:'jpeg', quality:0.98 },
+          html2canvas: { scale:2, backgroundColor:'#ffffff', useCORS:true, scrollY:0, scrollX:0 },
+          jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+          pagebreak: { mode:['css','legacy'] }
+        }).from(modal).toPdf().get('pdf').then(function(pdf){
+          if (png){
+            try {
+              var sc = (210 - MG*2) / modalW;   // mm trên mỗi px
+              pdf.setPage(1);
+              pdf.addImage(png, 'PNG', MG + relLeft*sc, MG + relTop*sc, logoPxW*sc, logoPxH*sc);
+            } catch(e){}
+          }
+          pdf.save(name);
+          restore();
+        }).catch(restore);
+      }, 80);
+    });
   }
   Array.prototype.forEach.call(document.querySelectorAll('.pdf-btn'), function(b){ b.addEventListener('click', downloadPdf); });
   document.getElementById('dqClose').addEventListener('click', closeDetail);
